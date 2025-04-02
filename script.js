@@ -1,17 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // DOM Elements
     const taskInput = document.getElementById('task-input');
     const addButton = document.getElementById('add-button');
     const taskList = document.getElementById('task-list');
     const tasksLeftSpan = document.querySelector('.tasks-left');
     const filterButtons = document.querySelectorAll('.filter-button');
     const clearCompletedButton = document.querySelector('.clear-completed');
+    const themeSwitch = document.getElementById('theme-switch');
     
-    // App State
     let tasks = JSON.parse(localStorage.getItem('todo-tasks')) || [];
     let currentFilter = 'all';
+    let currentTheme = localStorage.getItem('theme') || 'light';
     
-    // Functions
     function renderTasks() {
         taskList.innerHTML = '';
         
@@ -124,7 +123,6 @@ document.addEventListener('DOMContentLoaded', function() {
         renderTasks();
     }
     
-    // Event Listeners
     addButton.addEventListener('click', addTask);
     
     taskInput.addEventListener('keypress', function(e) {
@@ -141,6 +139,24 @@ document.addEventListener('DOMContentLoaded', function() {
     
     clearCompletedButton.addEventListener('click', clearCompleted);
     
-    // Initial render
+    function applyTheme(theme) {
+        if (theme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+            document.documentElement.removeAttribute('data-theme');
+        }
+        localStorage.setItem('theme', theme);
+        currentTheme = theme;
+    }
+    
+    function toggleTheme() {
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        applyTheme(newTheme);
+    }
+
+    themeSwitch.addEventListener('click', toggleTheme);
+    
+    applyTheme(currentTheme);
+    
     renderTasks();
 });
